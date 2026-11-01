@@ -1,0 +1,11 @@
+stateDiagram-v2
+  direction LR
+  [*] --> New : problem added
+  New --> Learning : Again / Hard / Good
+  New --> Review : Easy
+  Learning --> Review : Good / Easy
+  Review --> Relearning : Again (lapse)
+  Relearning --> Review : Good / Easy
+  Review --> Suspended : suspend
+  Suspended --> Review : resume
+  Review --> [*] : problem deleted

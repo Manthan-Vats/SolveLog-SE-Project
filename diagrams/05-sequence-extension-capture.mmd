@@ -1,0 +1,21 @@
+sequenceDiagram
+  autonumber
+  actor U as User
+  participant E as Companion Extension
+  participant J as Judge Site
+  participant API as Capture API
+  participant DB as Supabase DB
+
+  U->>J: submit, gets Accepted
+  E->>J: read problem + verdict
+  U->>E: click Capture
+  E->>API: POST /api/ext/capture (Bearer token)
+  API->>DB: validate token hash
+  alt token invalid or revoked
+    API-->>E: 401 Unauthorized
+  else token valid
+    API->>DB: upsert problem
+    DB-->>API: problem id
+    API-->>E: 200 OK
+    E-->>U: "Saved to SolveLog"
+  end

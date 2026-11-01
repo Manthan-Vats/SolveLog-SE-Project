@@ -1,0 +1,15 @@
+flowchart LR
+  WebUI["«component»<br/>Web UI"]
+  ExtC["«component»<br/>Companion Extension"]
+  APIc["«component»<br/>API Routes"]
+  AIc["«component»<br/>AI Analyzer"]
+  FS["«component»<br/>Review Scheduler (FSRS)"]
+  IMP["«component»<br/>Importer"]
+  SB["«component»<br/>Supabase (Auth + DB)"]
+
+  WebUI -- "REST / JSON" --> APIc
+  ExtC -- "REST + Bearer token" --> APIc
+  APIc -- "analyze()" --> AIc
+  APIc -- "gradeCard()" --> FS
+  APIc -- "importBatch()" --> IMP
+  APIc -- "SQL / Auth" --> SB

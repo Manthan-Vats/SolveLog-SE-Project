@@ -1,0 +1,12 @@
+flowchart LR
+  U["user : User"]
+  RP["page : RevisionPage"]
+  GA["api : GradeAPI"]
+  F["fsrs : Scheduler"]
+  DB["cards : ReviewCards"]
+
+  U -- "1: grade(good)" --> RP
+  RP -- "2: POST /review/grade" --> GA
+  GA -- "3: gradeCard(card, 3)" --> F
+  GA -- "4: upsert(card)" --> DB
+  GA -- "5: nextDue" --> RP

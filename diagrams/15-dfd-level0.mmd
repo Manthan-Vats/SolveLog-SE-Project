@@ -1,0 +1,17 @@
+flowchart LR
+  V[Visitor]
+  U[User]
+  O[Operator]
+  J[Judge Sites]
+  G[Gemini AI]
+  P0(("0<br/>SolveLog<br/>System"))
+
+  V -- access request --> P0
+  P0 -- public portfolio --> V
+  U -- problems, solutions, grades --> P0
+  P0 -- journal, analytics, due cards --> U
+  O -- approve / reject --> P0
+  P0 -- pending requests --> O
+  J -- problem data, verdicts --> P0
+  P0 -- code --> G
+  G -- tags, hints --> P0

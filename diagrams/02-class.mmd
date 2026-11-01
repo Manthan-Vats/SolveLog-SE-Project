@@ -1,0 +1,68 @@
+classDiagram
+  direction LR
+  class User {
+    -id : UUID
+    -email : String
+    -password : String
+    +signIn(email : String, password : String) bool
+    +signOut() void
+  }
+  class Operator {
+    +approve(req : AccessRequest) void
+  }
+  class Profile {
+    -username : String
+    -displayName : String
+    -cfHandle : String
+    +update() void
+  }
+  class Problem {
+    -id : UUID
+    -title : String
+    -url : String
+    -platform : String
+    -difficulty : String
+    -isPublic : bool
+    -solvedAt : DateTime
+    +publish() void
+    +addSolution(s : Solution) void
+  }
+  class Solution {
+    -id : UUID
+    -language : String
+    -code : String
+    -verdict : String
+    -aiStatus : String
+    +requestAnalysis() void
+  }
+  class AIAnalysis {
+    -algorithms : String[]
+    -dataStructures : String[]
+    -confidence : String
+    +getTags() String[]
+  }
+  class ReviewCard {
+    -due : DateTime
+    -state : int
+    -reps : int
+    -lapses : int
+    +grade(rating : int) void
+  }
+  class TimingSession {
+    -startedAt : DateTime
+    -endedAt : DateTime
+    +duration() int
+  }
+  class AccessRequest {
+    -email : String
+    -status : String
+  }
+
+  User <|-- Operator
+  User "1" -- "1" Profile : has
+  User "1" --> "0..*" Problem : logs
+  Problem "1" *-- "0..*" Solution : contains
+  Problem "1" *-- "0..*" TimingSession : timed by
+  Problem "1" *-- "0..1" ReviewCard : revised via
+  Solution "1" *-- "0..1" AIAnalysis : analysed by
+  Operator "1" --> "0..*" AccessRequest : reviews

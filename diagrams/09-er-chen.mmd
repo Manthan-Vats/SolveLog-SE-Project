@@ -1,0 +1,29 @@
+flowchart LR
+  U[USER]
+  P[PROBLEM]
+  S[SOLUTION]
+  A[AI_ANALYSIS]
+  R[REVIEW_CARD]
+
+  R1{logs}
+  R2{has}
+  R3{analysed_by}
+  R4{revised_via}
+
+  U ---|1| R1 ---|N| P
+  P ---|1| R2 ---|N| S
+  S ---|1| R3 ---|1| A
+  P ---|1| R4 ---|1| R
+
+  u1([<u>user_id</u>]) --- U
+  u2([email]) --- U
+  p1([<u>problem_id</u>]) --- P
+  p2([title]) --- P
+  p3([platform]) --- P
+  s1([<u>solution_id</u>]) --- S
+  s2([language]) --- S
+  s3([code]) --- S
+  a1([<u>analysis_id</u>]) --- A
+  a2(["{algorithms}"]) --- A
+  r1([<u>card_id</u>]) --- R
+  r2([due]) --- R

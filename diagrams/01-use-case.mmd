@@ -1,0 +1,36 @@
+flowchart LR
+  Visitor["«actor»<br/>Visitor"]
+  User["«actor»<br/>User"]
+  Operator["«actor»<br/>Operator"]
+  Ext["«actor»<br/>Companion Extension"]
+  AI["«actor»<br/>Gemini AI"]
+
+  subgraph SYS["SolveLog System"]
+    UC1(["View public portfolio"])
+    UC2(["Request access"])
+    UC3(["Sign in"])
+    UC4(["Log problem"])
+    UC5(["Add solution"])
+    UC6(["Analyze solution"])
+    UC7(["Revise problems"])
+    UC8(["Get AI hint"])
+    UC9(["Publish to portfolio"])
+    UC10(["Capture problem"])
+    UC11(["Approve access request"])
+  end
+
+  Visitor --- UC1
+  Visitor --- UC2
+  User --- UC3
+  User --- UC4
+  User --- UC5
+  User --- UC7
+  User --- UC9
+  Ext --- UC10
+  Operator --- UC11
+  UC6 --- AI
+
+  UC4 -. "«include»" .-> UC3
+  UC5 -. "«include»" .-> UC6
+  UC8 -. "«extend»" .-> UC7
+  UC10 -. "«include»" .-> UC4

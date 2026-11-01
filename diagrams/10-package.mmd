@@ -1,0 +1,27 @@
+flowchart TB
+  subgraph UI["«package» ui"]
+    pages[Pages]
+    comps[Components]
+  end
+  subgraph API["«package» api"]
+    routes[Route Handlers]
+  end
+  subgraph LIB["«package» lib"]
+    ai[ai]
+    fsrs[fsrs]
+    imp[import]
+    sb[supabase]
+  end
+  subgraph EXT["«package» extension"]
+    bg[Background]
+    cs[Content Scripts]
+  end
+  subgraph DB["«package» database"]
+    mig[Migrations + RLS]
+  end
+
+  UI -. "«import»" .-> LIB
+  UI -. "«access»" .-> API
+  API -. "«import»" .-> LIB
+  EXT -. "«access»" .-> API
+  LIB -. "«access»" .-> DB

@@ -1,0 +1,30 @@
+flowchart TD
+  S@{ shape: sm-circ, label: "start" }
+  A(Enter problem URL)
+  B(Fetch metadata)
+  C{Metadata found?}
+  D(Enter details manually)
+  M{" "}
+  E(Save problem)
+  F{Add solution?}
+  G(Paste code and save)
+  FK@{ shape: fork, label: "fork" }
+  H(Run AI analysis)
+  I(Show solution page)
+  JN@{ shape: fork, label: "join" }
+  X@{ shape: fr-circ, label: "end" }
+
+  S --> A --> B --> C
+  C -- "[no]" --> D --> M
+  C -- "[yes]" --> M
+  M --> E --> F
+  F -- "[no]" --> X
+  F -- "[yes]" --> G --> FK
+  FK --> H --> JN
+  FK --> I --> JN
+  JN --> X
+
+  style S fill:#000,stroke:#000
+  style FK fill:#000,stroke:#000
+  style JN fill:#000,stroke:#000
+  style X fill:#000,stroke:#000

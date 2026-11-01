@@ -1,0 +1,30 @@
+classDiagram
+  direction LR
+  class u1["u1 : User"] {
+    id = "a1f3"
+    role = "member"
+  }
+  class p1["p1 : Problem"] {
+    title = "Two Sum"
+    platform = "leetcode"
+    difficulty = "easy"
+    isPublic = true
+  }
+  class s1["s1 : Solution"] {
+    language = "cpp"
+    verdict = "Accepted"
+    aiStatus = "done"
+  }
+  class a1["a1 : AIAnalysis"] {
+    algorithms = "hashing"
+    dataStructures = "hash map"
+  }
+  class r1["r1 : ReviewCard"] {
+    state = 2
+    reps = 3
+    due = "2026-11-05"
+  }
+  u1 -- p1 : logs
+  p1 -- s1 : contains
+  s1 -- a1 : analysed by
+  p1 -- r1 : revised via

@@ -1,0 +1,24 @@
+sequenceDiagram
+  autonumber
+  actor U as User
+  participant UI as Problem Page
+  participant API as Solutions API
+  participant DB as Supabase DB
+  participant AI as Gemini AI
+
+  U->>UI: paste code, click Save
+  UI->>API: POST /api/solutions
+  API->>DB: getUser()
+  alt not signed in
+    API-->>UI: 401 Unauthorized
+  else signed in
+    API->>DB: insert solution (aiStatus = pending)
+    DB-->>API: solution
+    API-->>UI: 201 Created
+    UI-->>U: show solution
+    opt user has Gemini key
+      API->>AI: analyzeCode(problem, code)
+      AI-->>API: tags
+      API->>DB: save analysis (aiStatus = done)
+    end
+  end

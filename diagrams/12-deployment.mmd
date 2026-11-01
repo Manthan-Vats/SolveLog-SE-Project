@@ -1,0 +1,23 @@
+flowchart LR
+  subgraph PC["«device» User PC"]
+    subgraph BR["«exec env» Browser"]
+      web["«artifact»<br/>SolveLog web pages"]
+      ext["«artifact»<br/>Companion extension"]
+    end
+  end
+  subgraph VC["«node» Vercel Cloud"]
+    next["«artifact»<br/>Next.js app (Node.js)"]
+  end
+  subgraph SBC["«node» Supabase Cloud"]
+    pg[("«database»<br/>PostgreSQL")]
+    auth["«service»<br/>Auth"]
+  end
+  gem["«node»<br/>Google Gemini API"]
+  judge["«node»<br/>Judge sites"]
+
+  web -- HTTPS --> next
+  ext -- HTTPS --> next
+  ext -- HTTPS --> judge
+  next -- HTTPS --> pg
+  next -- HTTPS --> auth
+  next -- HTTPS --> gem

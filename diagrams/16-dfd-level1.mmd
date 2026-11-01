@@ -1,0 +1,29 @@
+flowchart LR
+  U[User]
+  O[Operator]
+  G[Gemini AI]
+
+  P1(("1.0<br/>Manage<br/>Access"))
+  P2(("2.0<br/>Manage<br/>Problems"))
+  P3(("3.0<br/>Analyze<br/>Solution"))
+  P4(("4.0<br/>Schedule<br/>Revision"))
+
+  D1["D1 &#124; Users"]
+  D2["D2 &#124; Problems"]
+  D3["D3 &#124; Solutions"]
+  D4["D4 &#124; Review Cards"]
+
+  O -- decision --> P1
+  U -- credentials --> P1
+  P1 -- account --> D1
+  U -- problem, code --> P2
+  P2 -- problem --> D2
+  P2 -- solution --> D3
+  D3 -- code --> P3
+  P3 -- code --> G
+  G -- tags --> P3
+  P3 -- analysis --> D3
+  U -- grade --> P4
+  D4 -- card --> P4
+  P4 -- next due --> D4
+  P4 -- due list --> U

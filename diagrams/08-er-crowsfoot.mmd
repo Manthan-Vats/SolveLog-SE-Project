@@ -1,0 +1,66 @@
+erDiagram
+  USERS ||--o| PROFILE : has
+  USERS ||--o{ PROBLEMS : logs
+  PROBLEMS ||--o{ SOLUTIONS : has
+  SOLUTIONS ||--o| AI_ANALYSES : "analysed by"
+  PROBLEMS ||--o{ TIMING_SESSIONS : "timed by"
+  PROBLEMS ||--o| REVIEW_CARDS : "revised via"
+  USERS ||--o{ EXTENSION_TOKENS : owns
+  USERS |o--o{ ACCESS_REQUESTS : reviews
+
+  USERS {
+    uuid id PK
+    text email UK
+  }
+  PROFILE {
+    uuid id PK
+    uuid user_id FK
+    text username UK
+    text cf_handle
+  }
+  PROBLEMS {
+    uuid id PK
+    uuid user_id FK
+    text title
+    text url
+    text platform
+    text difficulty_norm
+    boolean is_public
+  }
+  SOLUTIONS {
+    uuid id PK
+    uuid problem_id FK
+    text language
+    text code
+    text ai_status
+  }
+  AI_ANALYSES {
+    uuid id PK
+    uuid solution_id FK
+    text_array algorithms
+    text confidence
+  }
+  TIMING_SESSIONS {
+    uuid id PK
+    uuid problem_id FK
+    timestamptz started_at
+    timestamptz ended_at
+  }
+  REVIEW_CARDS {
+    uuid id PK
+    uuid problem_id FK
+    timestamptz due
+    smallint state
+  }
+  EXTENSION_TOKENS {
+    uuid id PK
+    uuid user_id FK
+    text token_hash UK
+    timestamptz revoked_at
+  }
+  ACCESS_REQUESTS {
+    uuid id PK
+    uuid reviewed_by FK
+    text email
+    text status
+  }
