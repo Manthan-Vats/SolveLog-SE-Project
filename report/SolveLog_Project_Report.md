@@ -544,18 +544,21 @@ Executed on **1 November 2026** against `https://solvelog.vercel.app` with `curl
 | ST-13 | Method restriction | `GET /api/invites` (POST-only route) | 405 | 405 | PASS |
 | ST-14 | SEO files | `GET /robots.txt`, `GET /sitemap.xml` | 200 | 200, 200 | PASS |
 | ST-15 | Legal page | `GET /privacy` | 200 | 200 | PASS |
-| ST-16 | Public problem list (anonymous) | `GET /api/problems` | 200 with published problems | **500** "Failed to fetch problems" | **FAIL** (env.) |
-| ST-17 | Health check | `GET /api/heartbeat` | 200 `{ok:true}` | **500** "Heartbeat failed" | **FAIL** (env.) |
+| ST-16 | Public problem list (anonymous) | `GET /api/problems` | 200 with published problems | Run 1: **500** · Re-test: 200, JSON list of published problems | FAIL → **PASS** |
+| ST-17 | Health check | `GET /api/heartbeat` | 200 `{ok:true}` | Run 1: **500** · Re-test: 200 `{ok:true}` | FAIL → **PASS** |
 | ST-18 | Performance: TTFB | `GET /` | < 1 s | 0.43 s (total 0.45 s) | PASS |
 
 **Defect analysis for ST-16 and ST-17.** Both endpoints query the database directly. During the
-test run the Supabase project host did not resolve in DNS, so every database call failed. This
-is consistent with the Supabase free tier, which automatically **pauses** projects after a period
-of inactivity. The application code handled it correctly: it returned a clean 500 JSON error with
-no stack trace or secret leaked, and every non-database route kept working. This is an
-**environment** defect, not a code defect. Corrective action: resume the Supabase project from
-its dashboard and re-run ST-16/ST-17; long-term, schedule a keep-alive call to `/api/heartbeat`
-(the endpoint already exists for this purpose).
+first run (1 November 2026) the Supabase project host did not resolve in DNS, so every database
+call failed: the free-tier project had been automatically **paused** after a period of
+inactivity. The application code handled it correctly: it returned a clean 500 JSON error with
+no stack trace or secret leaked, and every non-database route kept working. This was an
+**environment** defect, not a code defect.
+
+*Corrective action and re-test:* the project was restored from the Supabase dashboard and both
+cases were re-executed on **2 November 2026**. Both returned 200 with correct payloads, so the
+defect is **closed**. Preventive action: schedule a keep-alive call to `/api/heartbeat` (the
+endpoint already exists for this purpose) so the free tier never pauses again.
 
 ### 6.7 User Acceptance Test Cases (manual, during development)
 
@@ -597,10 +600,11 @@ its dashboard and re-run ST-16/ST-17; long-term, schedule a keep-alive call to `
 | Automated unit assertions | 339 | 339 | 0 | 100% |
 | Black-box cases (EP/BVA) | 10 | 10 | 0 | 100% |
 | White-box basis paths | 5 | 5 | 0 | 100% |
-| System / security (production) | 18 | 16 | 2* | 88.9% |
+| System / security (production) | 18 | 18 | 0* | 100% |
 | User acceptance | 10 | 10 | 0 | 100% |
 
-\* Both failures are environment-caused (paused database), as analysed in Section 6.6.
+\* ST-16 and ST-17 failed on the first run because the database was paused (an environment
+issue). They passed on re-test after the restore; see Section 6.6.
 
 <div class="pagebreak"></div>
 
@@ -610,28 +614,38 @@ its dashboard and re-run ST-16/ST-17; long-term, schedule a keep-alive call to `
 (PostgreSQL + Auth + RLS), ts-fsrs, Google Gemini (`@google/genai`) with Groq fallback, Monaco
 Editor, Recharts, GSAP, WXT (extension framework), Sentry (error monitoring), Vercel (hosting).
 
-Screenshots were captured from the running application during development.
+Screenshots were captured from the production deployment on 2 November 2026. A recorded
+walkthrough of the same flows (`demo/SolveLog_Demo.mp4`, 2 min 49 s) is in the project repository.
 
 ![Landing page](screenshots/01-landing.png)
-*Figure 7.1: Landing page*
+*Figure 7.1: Landing page (signed out)*
 
 ![Login](screenshots/02-login.png)
-*Figure 7.2: Sign-in page*
+*Figure 7.2: Invite-only sign-in*
 
-![Add problem](screenshots/04-add-problem.png)
-*Figure 7.3: Add problem*
+![Dashboard](screenshots/03-dashboard.png)
+*Figure 7.3: Dashboard with setup checklist, streak, revision counts and recent entries*
+
+![Problems](screenshots/04-problems.png)
+*Figure 7.4: Problem journal with search and filters*
 
 ![Problem detail](screenshots/05-problem-detail.png)
-*Figure 7.4: Problem detail with solution and AI analysis*
+*Figure 7.5: Problem detail: solution code and solve timer*
 
-![Analytics](screenshots/06-analytics.png)
-*Figure 7.5: Analytics*
+![Add problem](screenshots/06-add-problem.png)
+*Figure 7.6: Add problem: metadata auto-filled from a Codeforces URL (FR-5)*
 
-![Revision](screenshots/07-revision.png)
-*Figure 7.6: FSRS revision queue*
+![Analytics](screenshots/07-analytics.png)
+*Figure 7.7: Analytics: activity heatmap, topic distribution, average solve time per topic*
 
-![Public portfolio](screenshots/08-public-portfolio.png)
-*Figure 7.7: Public portfolio*
+![Revision](screenshots/08-revision.png)
+*Figure 7.8: FSRS revision queue*
+
+![Settings](screenshots/09-settings.png)
+*Figure 7.9: Settings: profile, handles, AI key, extension tokens*
+
+![Public portfolio](screenshots/10-public-portfolio.png)
+*Figure 7.10: Public portfolio at /u/&lt;handle&gt;*
 
 <div class="pagebreak"></div>
 
@@ -643,9 +657,9 @@ SolveLog meets its three goals. **Retention** comes from FSRS-scheduled revision
 comes from AI pattern tagging, coverage analytics and on-demand hints. **Proof of work** comes
 from a curated, private-by-default public portfolio. Security is enforced at the database layer
 with RLS, backed by explicit ownership checks, encrypted AI keys, hashed extension tokens and rate
-limiting. The automated suite of 339 assertions passes completely, and system tests against
-production confirmed the expected authentication and validation behaviour. The only failures were
-traced to a paused database, not to the application.
+limiting. The automated suite of 339 assertions passes completely, and all 18 system tests against
+production pass. The two failures on the first run were traced to a paused database; they were
+fixed by restoring it and confirmed by re-testing.
 
 ### 8.2 Limitations
 

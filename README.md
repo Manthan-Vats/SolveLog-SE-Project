@@ -9,6 +9,7 @@ App source: [Manthan-Vats/competitive-programming-journal](https://github.com/Ma
 | Folder | What's inside |
 |---|---|
 | [`diagrams/`](diagrams/) | 16 diagrams, each as Mermaid source (`.mmd`), `.png` and `.svg`, with an exam checklist per diagram. **[Start here](diagrams/README.md)** |
+| [`demo/`](demo/) | Recorded walkthrough of the live app ([MP4](demo/SolveLog_Demo.mp4), 2:49) plus a timed [voiceover script](demo/VOICEOVER.md) |
 | [`report/`](report/) | Project report in SRS (IEEE 830) format: [PDF](report/SolveLog_Project_Report.pdf) · [Markdown](report/SolveLog_Project_Report.md) |
 
 ## Diagrams
